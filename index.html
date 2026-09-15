@@ -30,6 +30,11 @@
  .hero-slide.active{opacity:1}
  .hero-pathways{font-family:'Jost',sans-serif;font-weight:400;font-size:clamp(20px,2.6vw,28px);color:#fff;margin:24px auto 6px;max-width:700px;text-shadow:0 2px 12px rgba(0,0,0,.5)}
  .hero-sub{margin-top:0}
+ #bechara-portrait.about-photo{aspect-ratio:2500/3743;height:auto;width:100%;max-width:420px;margin:0 auto;clip-path:none;border-radius:28px;overflow:hidden}
+ #bechara-portrait .about-photo-bg{background-size:cover;background-position:center;border-radius:28px}
+ @media (max-width:960px){
+   #bechara-portrait.about-photo{max-width:340px}
+ }
 </style>
 </head>
 <body>
@@ -90,7 +95,7 @@
     <a href="#contact" class="btn btn-solid">Get In Touch</a>
    </div>
   </div>
-  <div class="about-photo reveal">
+  <div class="about-photo reveal" id="bechara-portrait">
    <div class="about-photo-bg" style="--img:url('images/dsc03933-2.jpg')"></div>
   </div>
  </div>
