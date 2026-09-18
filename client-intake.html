@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Intake | Leaf &amp; Hook</title>
+<meta name="description" content="Private client intake form for Leaf & Hook.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+ body{background:var(--cream)}
+ .intake-header{padding:70px 24px 40px;text-align:center;max-width:720px;margin:0 auto}
+ .intake-header .eyebrow{margin-bottom:16px}
+ .intake-header .disp{font-size:clamp(30px,4.4vw,48px);margin-bottom:18px}
+ .intake-header p{margin:0 auto;font-size:16.5px}
+
+ .form-shell{max-width:720px;margin:0 auto;padding:0 24px 140px}
+ .form-section{margin-bottom:64px;padding-top:36px;border-top:1px solid var(--rule)}
+ .form-section:first-of-type{border-top:none}
+ .section-label{font-family:'Oswald',sans-serif;text-transform:uppercase;font-weight:600;letter-spacing:.04em;font-size:clamp(20px,2.6vw,26px);color:var(--rust);margin-bottom:28px;display:block}
+
+ .info-box{background:rgba(211,139,67,.1);border-left:4px solid var(--orange);padding:20px 24px;border-radius:var(--radius-md);font-size:14.5px;color:var(--ink);margin-bottom:32px;line-height:1.7}
+ .alert-box{background:rgba(165,76,36,.08);border-left:4px solid var(--rust);padding:20px 24px;border-radius:var(--radius-md);font-size:14.5px;color:var(--ink);margin-bottom:32px;line-height:1.7}
+ .alert-box strong{color:var(--rust)}
+
+ .q-field{margin-bottom:30px}
+ .field-label{display:block;font-family:'Oswald',sans-serif;font-weight:500;font-size:16px;color:var(--ink);margin-bottom:10px;letter-spacing:.01em}
+ .field-sub{display:block;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin:-4px 0 10px}
+ .helper{display:block;font-size:13px;color:var(--slate);margin-top:8px;line-height:1.6}
+
+ input[type=text],input[type=email],input[type=tel],textarea,select{
+   width:100%;padding:14px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);
+   font-family:'Jost',sans-serif;font-size:15.5px;color:var(--ink);background:#fff;
+ }
+ textarea{resize:vertical;line-height:1.6}
+ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c5747' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:18px;cursor:pointer}
+ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--rust)}
+
+ .pill-group{display:flex;flex-wrap:wrap;gap:10px}
+ .pill-option{position:relative;border:1px solid var(--rule);border-radius:999px;padding:11px 20px;font-size:14px;color:var(--ink);cursor:pointer;transition:background .2s ease,border-color .2s ease,color .2s ease}
+ .pill-option input{position:absolute;opacity:0;width:1px;height:1px}
+ .pill-option:hover{border-color:var(--rust)}
+ .pill-option:has(input:checked){background:var(--rust);border-color:var(--rust);color:#fff}
+
+ .stack-group{display:flex;flex-direction:column;gap:10px}
+ .stack-option{position:relative;border:1px solid var(--rule);border-radius:var(--radius-sm);padding:14px 18px;font-size:14.5px;color:var(--ink);cursor:pointer;transition:border-color .2s ease,background .2s ease}
+ .stack-option input{position:absolute;opacity:0;width:1px;height:1px}
+ .stack-option:hover{border-color:var(--rust)}
+ .stack-option:has(input:checked){border-color:var(--rust);background:rgba(165,76,36,.06)}
+
+ .path-group{display:flex;flex-direction:column;gap:14px}
+ .path-option{position:relative;border:1.5px solid var(--rule);border-radius:var(--radius-md);padding:22px 24px;cursor:pointer;transition:border-color .2s ease,background .2s ease}
+ .path-option input{position:absolute;opacity:0;width:1px;height:1px}
+ .path-option:hover{border-color:var(--rust)}
+ .path-option:has(input:checked){border-color:var(--rust);background:rgba(165,76,36,.05)}
+ .path-title{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;font-size:15.5px;color:var(--ink);margin-bottom:8px;letter-spacing:.02em}
+ .path-desc{font-size:14px;color:var(--slate);margin:0;line-height:1.7}
+
+ .conditional-field{display:none;margin-top:14px}
+ .conditional-field.show{display:block}
+
+ .scale-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+ .scale-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--rule);background:#fff;font-family:'DM Mono',monospace;font-size:14px;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease,color .2s ease}
+ .scale-btn:hover{border-color:var(--rust)}
+ .scale-btn.selected{background:var(--orange);border-color:var(--orange);color:#fff}
+ .scale-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);margin-top:10px}
+
+ .submit-note{background:var(--cream2);border-radius:var(--radius-md);padding:22px 24px;font-size:14.5px;color:var(--slate);line-height:1.7;margin-bottom:26px}
+ .submit-note strong{color:var(--ink)}
+ .btn-submit{width:100%;justify-content:center;padding:20px;font-size:13px}
+ .submit-error{display:none;color:var(--rust);font-size:14px;margin-top:14px;text-align:center}
+
+ #thank-you{display:none;text-align:center;padding:120px 24px;max-width:600px;margin:0 auto}
+ #thank-you .disp{font-size:clamp(32px,4.4vw,48px);margin-bottom:22px}
+ #thank-you p{margin:0 auto 20px;font-size:16.5px}
+ #thank-you .signed{font-family:'Oswald',sans-serif;font-style:italic;font-weight:400;color:var(--rust);font-size:18px;margin-top:30px}
+
+ @media (max-width:600px){
+   .path-option,.stack-option{padding:16px 18px}
+ }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav" style="justify-content:center">
+  <a href="#" class="brand" aria-label="Leaf and Hook" style="pointer-events:none">
+    <img src="leaf-hook-logo.png" alt="Leaf & Hook logo">
+    <span>Leaf &amp; Hook</span>
+  </a>
+</nav>
+
+<div class="intake-header">
+  <span class="eyebrow">Private Intake</span>
+  <div class="disp">Let's Get To Know You</div>
+  <p>This form helps me understand where you are, what you're carrying, and what you're looking for, so our first conversation can go straight to what matters. There are no right or wrong answers. Be as honest as you like.</p>
+</div>
+
+<div class="form-shell">
+<form id="intake-form" action="https://formspree.io/f/xqpaaklp" method="POST">
+  <input type="hidden" name="_subject" value="New Leaf & Hook Intake Form Submission">
+  <input type="hidden" name="_replyto" value="Bechara@leafandhook.com">
+
+  <!-- SECTION 01 -->
+  <div class="form-section">
+    <span class="section-label">01 &middot; About You</span>
+
+    <div class="q-field">
+      <label class="field-label" for="full_name">Full name</label>
+      <input type="text" id="full_name" name="full_name" placeholder="Your name" required>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="preferred_name">Preferred name</label>
+      <input type="text" id="preferred_name" name="preferred_name" placeholder="Nickname or how you'd like to be addressed">
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="email">Email address</label>
+      <input type="email" id="email" name="email" placeholder="your@email.com" required>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="whatsapp">WhatsApp number</label>
+      <input type="tel" id="whatsapp" name="whatsapp" placeholder="+971 &middot; &middot; &middot;" required>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="age">Age</label>
+      <input type="text" id="age" name="age" placeholder="Your age">
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="location">Where you are based</label>
+      <input type="text" id="location" name="location" placeholder="City / Country">
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="occupation">Occupation or field of work</label>
+      <input type="text" id="occupation" name="occupation" placeholder="e.g. Executive, athlete, entrepreneur, healthcare...">
+      <span class="helper">Not required, but helpful to understand your lifestyle and daily pressures.</span>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="how_found">How did you find me?</label>
+      <select id="how_found" name="how_found">
+        <option value="">Select one</option>
+        <option>Prana Harmony event</option>
+        <option>Breathwork or cold workshop</option>
+        <option>Word of mouth / referral</option>
+        <option>Instagram</option>
+        <option>LinkedIn</option>
+        <option>Google search</option>
+        <option>Corporate or workplace</option>
+        <option>Other</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- SECTION 02 -->
+  <div class="form-section">
+    <span class="section-label">02 &middot; Where You Are Right Now</span>
+
+    <div class="info-box">This form helps me understand where you are, what you are carrying, and what you are looking for, so our first conversation can go straight to what matters. There are no right or wrong answers. Be as honest as you like.</div>
+
+    <div class="q-field">
+      <label class="field-label">Which of these comes closer to what brought you here?</label>
+      <div class="path-group">
+        <label class="path-option">
+          <input type="radio" name="path" value="Come Back" required>
+          <div class="path-title">Come Back</div>
+          <p class="path-desc">Something in me has gone quiet. I need to find my way back. I am carrying stress, anxiety, burnout, grief, health struggles, or a disconnection from myself that I want to address.</p>
+        </label>
+        <label class="path-option">
+          <input type="radio" name="path" value="Go Further" required>
+          <div class="path-title">Go Further</div>
+          <p class="path-desc">I am functional and performing, but I know there is more available to me. I want to break a ceiling, in performance, resilience, mental edge, physical capacity, or recovery.</p>
+        </label>
+        <label class="path-option">
+          <input type="radio" name="path" value="Both are true" required>
+          <div class="path-title">Both Are True</div>
+          <p class="path-desc">I am performing on the outside and struggling on the inside. I need both at once.</p>
+        </label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="current_reality">In your own words, what is going on for you right now?</label>
+      <textarea id="current_reality" name="current_reality" rows="6" placeholder="What is your current reality? What are you carrying? What made you reach out now rather than six months ago?" required></textarea>
+      <span class="helper">Write freely, this is the most important question on the form. No clinical language needed. Just tell me what your days feel like and what you are hoping to change.</span>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Which of these resonate with where you are?</label>
+      <span class="field-sub">Select all that apply</span>
+      <div class="pill-group">
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Anxiety or panic responses"><span>Anxiety or panic responses</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Depression or low mood"><span>Depression or low mood</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Burnout or chronic exhaustion"><span>Burnout or chronic exhaustion</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Disrupted or poor sleep"><span>Disrupted or poor sleep</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Emotional heaviness or numbness"><span>Emotional heaviness or numbness</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Grief or loss"><span>Grief or loss</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Life transition or reconstruction"><span>Life transition or reconstruction</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Chronic health condition"><span>Chronic health condition</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Inflammation or autoimmune"><span>Inflammation or autoimmune</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Medication dependence I want to reduce"><span>Medication dependence I want to reduce</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Can't switch off or disconnect"><span>Can't switch off or disconnect</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Disconnected from my body"><span>Disconnected from my body</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Running on adrenaline"><span>Running on adrenaline</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Wired but exhausted"><span>Wired but exhausted</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Mental fog under pressure"><span>Mental fog under pressure</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Performance plateau"><span>Performance plateau</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Poor recovery from training"><span>Poor recovery from training</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Seeking a genuine mental edge"><span>Seeking a genuine mental edge</span></label>
+        <label class="pill-option"><input type="checkbox" name="resonance_signals" value="Emotional flatness despite success"><span>Emotional flatness despite success</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How long have you been in this state?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="duration" value="A few weeks"><span>A few weeks</span></label>
+        <label class="pill-option"><input type="radio" name="duration" value="A few months"><span>A few months</span></label>
+        <label class="pill-option"><input type="radio" name="duration" value="6 months to a year"><span>6 months to a year</span></label>
+        <label class="pill-option"><input type="radio" name="duration" value="More than a year"><span>More than a year</span></label>
+        <label class="pill-option"><input type="radio" name="duration" value="This is my default for as long as I can remember"><span>This is my default for as long as I can remember</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="what_tried">What have you already tried that has not fully worked?</label>
+      <span class="helper">Therapy, gym, yoga, apps, medication, coaching, nutrition changes, anything. Helps me understand what the gaps are.</span>
+      <textarea id="what_tried" name="what_tried" rows="4" placeholder="What have you tried, and what did or did not land?" style="margin-top:10px"></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 03 -->
+  <div class="form-section">
+    <span class="section-label">03 &middot; Health &amp; Body</span>
+
+    <div class="alert-box"><strong>Please answer honestly:</strong> Some health conditions and medications require a modified approach, particularly in cold therapy and certain breathwork modalities. Nothing here disqualifies you. It helps me design the right program for your body.</div>
+
+    <div class="q-field">
+      <label class="field-label">Do you have any diagnosed medical conditions or a significant health history?</label>
+      <span class="helper">e.g. heart conditions, neurological issues, autoimmune, chronic pain, post-surgery, spinal conditions, blood pressure.</span>
+      <div class="stack-group" style="margin-top:12px">
+        <label class="stack-option"><input type="radio" name="medical_history" value="No significant conditions" data-toggle="medical_details_field"><span>No significant conditions</span></label>
+        <label class="stack-option"><input type="radio" name="medical_history" value="Yes - I will describe below" data-toggle="medical_details_field" data-show="true"><span>Yes, I will describe below</span></label>
+        <label class="stack-option"><input type="radio" name="medical_history" value="Prefer to discuss on the call" data-toggle="medical_details_field"><span>Prefer to discuss on the call</span></label>
+      </div>
+      <div class="conditional-field" id="medical_details_field">
+        <textarea name="medical_details" rows="3" placeholder="If yes, what conditions, and how long have you been managing them?"></textarea>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Are you currently taking any medication?</label>
+      <div class="stack-group">
+        <label class="stack-option"><input type="radio" name="medication" value="No" data-toggle="medication_details_field"><span>No</span></label>
+        <label class="stack-option"><input type="radio" name="medication" value="Yes - I will describe below" data-toggle="medication_details_field" data-show="true"><span>Yes, I will describe below</span></label>
+        <label class="stack-option"><input type="radio" name="medication" value="Prefer to discuss on the call" data-toggle="medication_details_field"><span>Prefer to discuss on the call</span></label>
+      </div>
+      <div class="conditional-field" id="medication_details_field">
+        <textarea name="medication_details" rows="3" placeholder="Type of medication and general purpose, no need for exact names if you prefer not to share."></textarea>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Do you have any experience with breathwork?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="breathwork_experience" value="None - completely new"><span>None, completely new</span></label>
+        <label class="pill-option"><input type="radio" name="breathwork_experience" value="Some - apps or occasional classes"><span>Some, apps or occasional classes</span></label>
+        <label class="pill-option"><input type="radio" name="breathwork_experience" value="Regular practice"><span>Regular practice</span></label>
+        <label class="pill-option"><input type="radio" name="breathwork_experience" value="I have worked with a facilitator before"><span>Worked with a facilitator before</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Do you have any experience with cold exposure?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="cold_experience" value="None"><span>None</span></label>
+        <label class="pill-option"><input type="radio" name="cold_experience" value="Cold showers occasionally"><span>Cold showers occasionally</span></label>
+        <label class="pill-option"><input type="radio" name="cold_experience" value="Regular cold showers"><span>Regular cold showers</span></label>
+        <label class="pill-option"><input type="radio" name="cold_experience" value="Ice baths occasionally"><span>Ice baths occasionally</span></label>
+        <label class="pill-option"><input type="radio" name="cold_experience" value="Regular ice bath practice"><span>Regular ice bath practice</span></label>
+        <label class="pill-option"><input type="radio" name="cold_experience" value="Nature cold - rivers, snow, sea"><span>Nature cold, rivers, snow, sea</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How would you describe your current relationship with physical exercise?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="fitness_level" value="Minimal or none"><span>Minimal or none</span></label>
+        <label class="pill-option"><input type="radio" name="fitness_level" value="Light and occasional"><span>Light and occasional</span></label>
+        <label class="pill-option"><input type="radio" name="fitness_level" value="Moderate and regular"><span>Moderate and regular</span></label>
+        <label class="pill-option"><input type="radio" name="fitness_level" value="Consistent and serious"><span>Consistent and serious</span></label>
+        <label class="pill-option"><input type="radio" name="fitness_level" value="High-performance training"><span>High-performance training</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="body_notes">Is there anything about your body or health that you want me to be aware of before we speak?</label>
+      <textarea id="body_notes" name="body_notes" rows="3" placeholder="Injuries, sensitivities, recent events, things you want to flag..."></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 04 -->
+  <div class="form-section">
+    <span class="section-label">04 &middot; Lifestyle &amp; Daily Reality</span>
+
+    <div class="q-field">
+      <label class="field-label">How would you describe your current sleep?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="sleep" value="Good - consistent and restorative"><span>Good, consistent and restorative</span></label>
+        <label class="pill-option"><input type="radio" name="sleep" value="Variable - depends on the week"><span>Variable, depends on the week</span></label>
+        <label class="pill-option"><input type="radio" name="sleep" value="Disrupted - trouble falling or staying asleep"><span>Disrupted</span></label>
+        <label class="pill-option"><input type="radio" name="sleep" value="Poor - chronic issue"><span>Poor, chronic issue</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How would you describe your relationship with food and nutrition?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="nutrition" value="Disciplined and intentional"><span>Disciplined and intentional</span></label>
+        <label class="pill-option"><input type="radio" name="nutrition" value="Reasonably balanced"><span>Reasonably balanced</span></label>
+        <label class="pill-option"><input type="radio" name="nutrition" value="Inconsistent - stress or habit-driven"><span>Inconsistent</span></label>
+        <label class="pill-option"><input type="radio" name="nutrition" value="Actively working to improve this"><span>Actively working to improve this</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How full is your typical week?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="schedule" value="Very full - I struggle to find time for myself"><span>Very full</span></label>
+        <label class="pill-option"><input type="radio" name="schedule" value="Busy but manageable"><span>Busy but manageable</span></label>
+        <label class="pill-option"><input type="radio" name="schedule" value="I have reasonable flexibility"><span>Reasonable flexibility</span></label>
+        <label class="pill-option"><input type="radio" name="schedule" value="I have significant availability"><span>Significant availability</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">What does your stress level feel like on a typical day?</label>
+      <span class="helper">1 = very calm &middot; 10 = constantly under pressure</span>
+      <input type="hidden" name="stress_level" id="stress_level">
+      <div class="scale-row" data-scale-for="stress_level"></div>
+      <div class="scale-labels"><span>Very calm</span><span>Constantly under pressure</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How would you rate how much like yourself you feel right now?</label>
+      <span class="helper">1 = completely lost from myself &middot; 10 = fully grounded and alive</span>
+      <input type="hidden" name="self_score" id="self_score">
+      <div class="scale-row" data-scale-for="self_score"></div>
+      <div class="scale-labels"><span>Lost from myself</span><span>Fully grounded and alive</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 05 -->
+  <div class="form-section">
+    <span class="section-label">05 &middot; What You Are Looking For</span>
+
+    <div class="q-field">
+      <label class="field-label" for="outcome_vision">What would a successful outcome look like for you, in your own words?</label>
+      <span class="helper">Not the technical version, the human one. How do you want to feel? What do you want to be able to do that you cannot do now?</span>
+      <textarea id="outcome_vision" name="outcome_vision" rows="5" placeholder="If this work does what it could, what changes? What does your life look like six months from now?" required style="margin-top:10px"></textarea>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How much time are you realistically able to commit to this each week?</label>
+      <div class="stack-group">
+        <label class="stack-option"><input type="radio" name="time_commitment" value="1–2 hours per week (sessions only)"><span>1&ndash;2 hours per week (sessions only)</span></label>
+        <label class="stack-option"><input type="radio" name="time_commitment" value="2–3 hours per week (sessions + some home practice)"><span>2&ndash;3 hours per week (sessions + some home practice)</span></label>
+        <label class="stack-option"><input type="radio" name="time_commitment" value="3–5 hours per week (committed daily practice)"><span>3&ndash;5 hours per week (committed daily practice)</span></label>
+        <label class="stack-option"><input type="radio" name="time_commitment" value="I want to go as deep as possible - I will make the time"><span>I want to go as deep as possible, I will make the time</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">What format works best for you right now?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="checkbox" name="format_preference" value="Online sessions"><span>Online sessions</span></label>
+        <label class="pill-option"><input type="checkbox" name="format_preference" value="In-person (Dubai)"><span>In-person (Dubai)</span></label>
+        <label class="pill-option"><input type="checkbox" name="format_preference" value="A mix of both"><span>A mix of both</span></label>
+        <label class="pill-option"><input type="checkbox" name="format_preference" value="I am flexible"><span>I am flexible</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Are you considering this for yourself only, or for you and a partner or group?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="who_for" value="Just me"><span>Just me</span></label>
+        <label class="pill-option"><input type="radio" name="who_for" value="Me and a partner (couples program)"><span>Me and a partner (couples program)</span></label>
+        <label class="pill-option"><input type="radio" name="who_for" value="Me and a small group of 3–6"><span>Me and a small group of 3&ndash;6</span></label>
+        <label class="pill-option"><input type="radio" name="who_for" value="Not sure yet"><span>Not sure yet</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How ready do you feel to start, right now, not in theory?</label>
+      <span class="helper">1 = just exploring, not ready &middot; 10 = ready to begin immediately</span>
+      <input type="hidden" name="readiness_score" id="readiness_score">
+      <div class="scale-row" data-scale-for="readiness_score"></div>
+      <div class="scale-labels"><span>Just exploring</span><span>Ready to begin now</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="anything_else">Is there anything else you want me to know before we speak?</label>
+      <textarea id="anything_else" name="anything_else" rows="4" placeholder="Anything that did not fit the questions above, context, concerns, things you want to raise on the call, or anything you feel is important for me to understand."></textarea>
+    </div>
+  </div>
+
+  <div class="submit-note"><strong>What happens next:</strong> Bechara reads this before the call. The discovery call is free, 20 minutes, and no pressure. You will leave with a clear sense of whether this is the right fit and what a program could look like for you.</div>
+
+  <button type="submit" class="btn btn-solid btn-submit" id="submit-btn">Send My Intake Form</button>
+  <div class="submit-error" id="submit-error">Something went wrong sending your form. Please try again, or email Bechara@leafandhook.com directly.</div>
+</form>
+
+<div id="thank-you">
+  <div class="disp">Thank You.</div>
+  <p>I have received your form and will read it before we speak. Expect a message from me within 24 hours to arrange the discovery call. In the meantime, notice how it felt to answer those questions honestly. That is already the beginning.</p>
+  <div class="signed">Bechara</div>
+</div>
+</div>
+
+<script>
+/* 1-10 scale buttons */
+document.querySelectorAll('.scale-row').forEach(function(row){
+  var targetId = row.getAttribute('data-scale-for');
+  var hidden = document.getElementById(targetId);
+  for (var i = 1; i <= 10; i++){
+    (function(n){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'scale-btn';
+      btn.textContent = n;
+      btn.addEventListener('click', function(){
+        row.querySelectorAll('.scale-btn').forEach(function(b){ b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        hidden.value = n;
+      });
+      row.appendChild(btn);
+    })(i);
+  }
+});
+
+/* conditional textareas (medical history / medication) */
+document.querySelectorAll('input[data-toggle]').forEach(function(input){
+  input.addEventListener('change', function(){
+    var field = document.getElementById(input.getAttribute('data-toggle'));
+    if (!field) return;
+    var groupName = input.name;
+    var showIt = false;
+    document.querySelectorAll('input[name="' + groupName + '"]').forEach(function(sibling){
+      if (sibling.checked && sibling.getAttribute('data-show') === 'true') showIt = true;
+    });
+    field.classList.toggle('show', showIt);
+  });
+});
+
+/* submit via fetch, show thank-you on success */
+var form = document.getElementById('intake-form');
+var submitBtn = document.getElementById('submit-btn');
+var errorBox = document.getElementById('submit-error');
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  errorBox.style.display = 'none';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+  var data = new FormData(form);
+  fetch(form.action, {
+    method: 'POST',
+    body: data,
+    headers: { 'Accept': 'application/json' }
+  }).then(function(response){
+    if (response.ok) {
+      form.style.display = 'none';
+      document.getElementById('thank-you').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      throw new Error('Form submission failed');
+    }
+  }).catch(function(){
+    errorBox.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send My Intake Form';
+  });
+});
+</script>
+</body>
+</html>
