@@ -94,11 +94,13 @@
 <div class="intake-header">
   <span class="eyebrow">Private Intake</span>
   <div class="disp">Let's Get To Know You</div>
+  <p style="font-family:'Oswald',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.03em;font-size:15px;color:var(--rust);margin-bottom:18px">Bechara El Khoury &middot; Instructor</p>
   <p>This form helps me understand where you are, what you're carrying, and what you're looking for, so our first conversation can go straight to what matters. There are no right or wrong answers. Be as honest as you like.</p>
+  <p style="font-size:13.5px;color:var(--slate);margin-top:18px"><strong style="color:var(--ink)">This intake is completely confidential.</strong> Everything you share here is read only by me and is never shared with anyone else.</p>
 </div>
 
 <div class="form-shell">
-<form id="intake-form" action="https://formspree.io/f/xqpaaklp" method="POST">
+<form id="intake-form" action="https://formspree.io/f/xdekkela" method="POST">
   <input type="hidden" name="_subject" value="New Leaf & Hook Intake Form Submission">
   <input type="hidden" name="_replyto" value="Bechara@leafandhook.com">
 
@@ -124,6 +126,7 @@
     <div class="q-field">
       <label class="field-label" for="whatsapp">WhatsApp number</label>
       <input type="tel" id="whatsapp" name="whatsapp" placeholder="+971 &middot; &middot; &middot;" required>
+      <span class="helper">Please include your country code, not everyone reaching out is based in Dubai.</span>
     </div>
 
     <div class="q-field">
@@ -381,8 +384,12 @@
       <div class="pill-group">
         <label class="pill-option"><input type="checkbox" name="format_preference" value="Online sessions"><span>Online sessions</span></label>
         <label class="pill-option"><input type="checkbox" name="format_preference" value="In-person (Dubai)"><span>In-person (Dubai)</span></label>
+        <label class="pill-option"><input type="checkbox" name="format_preference" value="In-person (other location)" id="format_other_checkbox"><span>In-person (other location)</span></label>
         <label class="pill-option"><input type="checkbox" name="format_preference" value="A mix of both"><span>A mix of both</span></label>
         <label class="pill-option"><input type="checkbox" name="format_preference" value="I am flexible"><span>I am flexible</span></label>
+      </div>
+      <div class="conditional-field" id="format_other_field">
+        <input type="text" name="format_other_location" placeholder="Which city or country? (e.g. another Emirate, or another country entirely)">
       </div>
     </div>
 
@@ -456,6 +463,13 @@ document.querySelectorAll('input[data-toggle]').forEach(function(input){
     });
     field.classList.toggle('show', showIt);
   });
+});
+
+/* conditional field: In-person (other location) */
+var formatOtherCheckbox = document.getElementById('format_other_checkbox');
+var formatOtherField = document.getElementById('format_other_field');
+formatOtherCheckbox.addEventListener('change', function(){
+  formatOtherField.classList.toggle('show', formatOtherCheckbox.checked);
 });
 
 /* submit via fetch, show thank-you on success */
