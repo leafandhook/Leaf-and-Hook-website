@@ -188,12 +188,15 @@
     <div class="q-field">
       <label class="field-label">Which is closest to how you feel after the session?</label>
       <div class="stack-group">
-        <label class="stack-option"><input type="radio" name="state_after" value="Settled and clear"><span>Settled and clear</span></label>
-        <label class="stack-option"><input type="radio" name="state_after" value="Calm but heavy or sleepy"><span>Calm but heavy or sleepy</span></label>
-        <label class="stack-option"><input type="radio" name="state_after" value="Tired or drained"><span>Tired or drained</span></label>
-        <label class="stack-option"><input type="radio" name="state_after" value="Emotional or tender"><span>Emotional or tender</span></label>
-        <label class="stack-option"><input type="radio" name="state_after" value="Restless or activated"><span>Restless or activated</span></label>
-        <label class="stack-option"><input type="radio" name="state_after" value="Mixed, I'll explain below"><span>Mixed, I'll explain below</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Settled and clear" data-toggle="state_after_explain_field"><span>Settled and clear</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Calm but heavy or sleepy" data-toggle="state_after_explain_field"><span>Calm but heavy or sleepy</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Tired or drained" data-toggle="state_after_explain_field"><span>Tired or drained</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Emotional or tender" data-toggle="state_after_explain_field"><span>Emotional or tender</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Restless or activated" data-toggle="state_after_explain_field"><span>Restless or activated</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Mixed, I'll explain below" data-toggle="state_after_explain_field" data-show="true"><span>Mixed, I'll explain below</span></label>
+      </div>
+      <div class="conditional-field" id="state_after_explain_field">
+        <textarea name="state_after_explain" rows="3" placeholder="What's the mix? A bit of each, or something else entirely..."></textarea>
       </div>
     </div>
   </div>
@@ -367,7 +370,7 @@
 
 <div id="thank-you">
   <div class="disp">Thank You.</div>
-  <p>Your reflection is with me. Every one of these adds a line to the story your body is writing. Until next time, keep coming back to the breath, even for six breaths.</p>
+  <p>Your reflection is with me. Every one of these adds a line to the story your body is writing. Until next time, keep coming back to the breath, in any moment of the day or night.</p>
   <div class="signed">Bechara</div>
 </div>
 </div>
@@ -387,6 +390,20 @@ var params = new URLSearchParams(window.location.search);
 if (params.get('name')) document.getElementById('full_name').value = params.get('name');
 if (params.get('session')) sessionSelect.value = params.get('session');
 if (params.get('program')) document.getElementById('program_field').value = params.get('program');
+
+/* conditional textarea: "Mixed, I'll explain below" */
+document.querySelectorAll('input[data-toggle]').forEach(function(input){
+  input.addEventListener('change', function(){
+    var field = document.getElementById(input.getAttribute('data-toggle'));
+    if (!field) return;
+    var groupName = input.name;
+    var showIt = false;
+    document.querySelectorAll('input[name="' + groupName + '"]').forEach(function(sibling){
+      if (sibling.checked && sibling.getAttribute('data-show') === 'true') showIt = true;
+    });
+    field.classList.toggle('show', showIt);
+  });
+});
 
 /* 1-10 (or custom range) scale buttons */
 document.querySelectorAll('.scale-row').forEach(function(row){
