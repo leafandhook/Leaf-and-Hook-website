@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post-Session Reflection | Leaf &amp; Hook</title>
+<meta name="description" content="Private post-session reflection form for Leaf & Hook.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+ body{background:var(--cream)}
+ .intake-header{padding:70px 24px 40px;text-align:center;max-width:720px;margin:0 auto}
+ .intake-header .eyebrow{margin-bottom:16px}
+ .intake-header .disp{font-size:clamp(30px,4.4vw,48px);margin-bottom:18px}
+ .intake-header p{margin:0 auto;font-size:16.5px}
+
+ .form-shell{max-width:720px;margin:0 auto;padding:0 24px 140px}
+ .form-section{margin-bottom:64px;padding-top:36px;border-top:1px solid var(--rule)}
+ .form-section:first-of-type{border-top:none}
+ .section-label{font-family:'Oswald',sans-serif;text-transform:uppercase;font-weight:600;letter-spacing:.04em;font-size:clamp(20px,2.6vw,26px);color:var(--rust);margin-bottom:28px;display:block}
+
+ .info-box{background:rgba(211,139,67,.1);border-left:4px solid var(--orange);padding:20px 24px;border-radius:var(--radius-md);font-size:14.5px;color:var(--ink);margin-bottom:32px;line-height:1.7}
+ .alert-box{background:rgba(165,76,36,.08);border-left:4px solid var(--rust);padding:20px 24px;border-radius:var(--radius-md);font-size:14.5px;color:var(--ink);margin-bottom:32px;line-height:1.7}
+ .alert-box strong{color:var(--rust)}
+
+ .q-field{margin-bottom:30px}
+ .field-label{display:block;font-family:'Oswald',sans-serif;font-weight:500;font-size:16px;color:var(--ink);margin-bottom:10px;letter-spacing:.01em}
+ .field-sub{display:block;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin:-4px 0 10px}
+ .helper{display:block;font-size:13px;color:var(--slate);margin-top:8px;line-height:1.6}
+
+ input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date],textarea,select{
+   width:100%;padding:14px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);
+   font-family:'Jost',sans-serif;font-size:15.5px;color:var(--ink);background:#fff;
+ }
+ textarea{resize:vertical;line-height:1.6}
+ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c5747' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:18px;cursor:pointer}
+ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--rust)}
+
+ .pill-group{display:flex;flex-wrap:wrap;gap:10px}
+ .pill-option{position:relative;border:1px solid var(--rule);border-radius:999px;padding:11px 20px;font-size:14px;color:var(--ink);cursor:pointer;transition:background .2s ease,border-color .2s ease,color .2s ease}
+ .pill-option input{position:absolute;opacity:0;width:1px;height:1px}
+ .pill-option:hover{border-color:var(--rust)}
+ .pill-option:has(input:checked){background:var(--rust);border-color:var(--rust);color:#fff}
+
+ .stack-group{display:flex;flex-direction:column;gap:10px}
+ .stack-option{position:relative;border:1px solid var(--rule);border-radius:var(--radius-sm);padding:14px 18px;font-size:14.5px;color:var(--ink);cursor:pointer;transition:border-color .2s ease,background .2s ease}
+ .stack-option input{position:absolute;opacity:0;width:1px;height:1px}
+ .stack-option:hover{border-color:var(--rust)}
+ .stack-option:has(input:checked){border-color:var(--rust);background:rgba(165,76,36,.06)}
+
+ .conditional-field{display:none;margin-top:14px}
+ .conditional-field.show{display:block}
+
+ .scale-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+ .scale-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--rule);background:#fff;font-family:'DM Mono',monospace;font-size:14px;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease,color .2s ease}
+ .scale-btn:hover{border-color:var(--rust)}
+ .scale-btn.selected{background:var(--orange);border-color:var(--orange);color:#fff}
+ .scale-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);margin-top:10px}
+
+ .submit-note{background:var(--cream2);border-radius:var(--radius-md);padding:22px 24px;font-size:14.5px;color:var(--slate);line-height:1.7;margin-bottom:26px}
+ .submit-note strong{color:var(--ink)}
+ .btn-submit{width:100%;justify-content:center;padding:20px;font-size:13px}
+ .submit-error{display:none;color:var(--rust);font-size:14px;margin-top:14px;text-align:center}
+
+ #thank-you{display:none;text-align:center;padding:120px 24px;max-width:600px;margin:0 auto}
+ #thank-you .disp{font-size:clamp(32px,4.4vw,48px);margin-bottom:22px}
+ #thank-you p{margin:0 auto 20px;font-size:16.5px}
+ #thank-you .signed{font-family:'Oswald',sans-serif;font-style:italic;font-weight:400;color:var(--rust);font-size:18px;margin-top:30px}
+
+ @media (max-width:600px){
+   .stack-option{padding:16px 18px}
+ }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav" style="justify-content:center">
+  <a href="#" class="brand" aria-label="Leaf and Hook" style="pointer-events:none">
+    <img src="leaf-hook-logo.png" alt="Leaf & Hook logo">
+    <span>Leaf &amp; Hook</span>
+  </a>
+</nav>
+
+<div class="intake-header">
+  <span class="eyebrow">Post-Session Reflection</span>
+  <div class="disp">How Did That Land?</div>
+  <p style="font-family:'Oswald',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.03em;font-size:15px;color:var(--rust);margin-bottom:18px">Bechara El Khoury &middot; Instructor</p>
+  <p>Take five quiet minutes, ideally within a few hours of our session, or the next morning. Your answers build a picture of how your body is changing over time, not just today. There are no right answers, only honest ones.</p>
+  <p style="font-size:13.5px;color:var(--slate);margin-top:18px"><strong style="color:var(--ink)">Confidential.</strong> Read only by me, and used only to guide our work together.</p>
+</div>
+
+<div class="form-shell">
+<form id="reflection-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+  <input type="hidden" name="_subject" id="subject_field" value="Post-Session Reflection">
+  <input type="hidden" name="_replyto" value="Bechara@leafandhook.com">
+  <input type="hidden" name="program" id="program_field" value="Reclaiming Balance &amp; Resilience">
+
+  <!-- SECTION 01 -->
+  <div class="form-section">
+    <span class="section-label">01 &middot; The Session</span>
+
+    <div class="q-field">
+      <label class="field-label" for="full_name">Your name</label>
+      <input type="text" id="full_name" name="full_name" placeholder="Your name" required>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="email">Email address</label>
+      <input type="email" id="email" name="email" placeholder="your@email.com" required>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="session_number">Session number</label>
+      <select id="session_number" name="session_number" required></select>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="session_date">Date of the session</label>
+      <input type="date" id="session_date" name="session_date" required>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">When are you filling this in?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="filled_when" value="Within 2 hours of the session" required><span>Within 2 hours of the session</span></label>
+        <label class="pill-option"><input type="radio" name="filled_when" value="The same evening"><span>The same evening</span></label>
+        <label class="pill-option"><input type="radio" name="filled_when" value="The next morning"><span>The next morning</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 02 -->
+  <div class="form-section">
+    <span class="section-label">02 &middot; Before &amp; After</span>
+    <div class="info-box">These are the same every time, so we can see your pattern clearly over the weeks. Go with your first instinct.</div>
+
+    <div class="q-field">
+      <label class="field-label">How calm did you feel just before the session?</label>
+      <input type="hidden" name="calm_before" id="calm_before" required>
+      <div class="scale-row" data-scale-for="calm_before" data-min="0" data-max="10"></div>
+      <div class="scale-labels"><span>Overwhelmed</span><span>Deeply calm</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How calm do you feel now, after the session?</label>
+      <input type="hidden" name="calm_after" id="calm_after" required>
+      <div class="scale-row" data-scale-for="calm_after" data-min="0" data-max="10"></div>
+      <div class="scale-labels"><span>Overwhelmed</span><span>Deeply calm</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Body pain just before the session</label>
+      <input type="hidden" name="pain_before" id="pain_before" required>
+      <div class="scale-row" data-scale-for="pain_before" data-min="0" data-max="10"></div>
+      <div class="scale-labels"><span>No pain</span><span>Worst pain</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Body pain now, after the session</label>
+      <input type="hidden" name="pain_after" id="pain_after" required>
+      <div class="scale-row" data-scale-for="pain_after" data-min="0" data-max="10"></div>
+      <div class="scale-labels"><span>No pain</span><span>Worst pain</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Energy just before the session</label>
+      <input type="hidden" name="energy_before" id="energy_before" required>
+      <div class="scale-row" data-scale-for="energy_before" data-min="0" data-max="10"></div>
+      <div class="scale-labels"><span>Drained</span><span>Full of energy</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Energy now, after the session</label>
+      <input type="hidden" name="energy_after" id="energy_after" required>
+      <div class="scale-row" data-scale-for="energy_after" data-min="0" data-max="10"></div>
+      <div class="scale-labels"><span>Drained</span><span>Full of energy</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How connected to your body do you feel right now?</label>
+      <input type="hidden" name="body_connection" id="body_connection">
+      <div class="scale-row" data-scale-for="body_connection" data-min="0" data-max="10"></div>
+      <div class="scale-labels"><span>Disconnected</span><span>Fully present in my body</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Which is closest to how you feel after the session?</label>
+      <div class="stack-group">
+        <label class="stack-option"><input type="radio" name="state_after" value="Settled and clear"><span>Settled and clear</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Calm but heavy or sleepy"><span>Calm but heavy or sleepy</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Tired or drained"><span>Tired or drained</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Emotional or tender"><span>Emotional or tender</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Restless or activated"><span>Restless or activated</span></label>
+        <label class="stack-option"><input type="radio" name="state_after" value="Mixed, I'll explain below"><span>Mixed, I'll explain below</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 03 -->
+  <div class="form-section">
+    <span class="section-label">03 &middot; Inside The Breath</span>
+
+    <div class="q-field">
+      <label class="field-label">The pace of the breathing felt</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="pace_felt" value="Too slow"><span>Too slow</span></label>
+        <label class="pill-option"><input type="radio" name="pace_felt" value="Just right"><span>Just right</span></label>
+        <label class="pill-option"><input type="radio" name="pace_felt" value="A bit fast"><span>A bit fast</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">The long exhales felt</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="exhale_felt" value="Easy"><span>Easy</span></label>
+        <label class="pill-option"><input type="radio" name="exhale_felt" value="Comfortable"><span>Comfortable</span></label>
+        <label class="pill-option"><input type="radio" name="exhale_felt" value="Slightly challenging"><span>Slightly challenging</span></label>
+        <label class="pill-option"><input type="radio" name="exhale_felt" value="Uncomfortable"><span>Uncomfortable</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">The pauses or breath holds felt</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="pauses_felt" value="Easy"><span>Easy</span></label>
+        <label class="pill-option"><input type="radio" name="pauses_felt" value="Comfortable"><span>Comfortable</span></label>
+        <label class="pill-option"><input type="radio" name="pauses_felt" value="Slightly challenging"><span>Slightly challenging</span></label>
+        <label class="pill-option"><input type="radio" name="pauses_felt" value="Uncomfortable"><span>Uncomfortable</span></label>
+        <label class="pill-option"><input type="radio" name="pauses_felt" value="No pauses this session"><span>No pauses this session</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">What did you notice in your body?</label>
+      <span class="field-sub">Choose all that apply</span>
+      <div class="pill-group">
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Warmth"><span>Warmth</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Tingling"><span>Tingling</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Heaviness"><span>Heaviness</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Lightness"><span>Lightness</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Pain eased"><span>Pain eased</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Pain increased"><span>Pain increased</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Yawning or sighing"><span>Yawning or sighing</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Tears or emotion"><span>Tears or emotion</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Sleepiness"><span>Sleepiness</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Restlessness"><span>Restlessness</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Light-headedness"><span>Light-headedness</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Deep stillness"><span>Deep stillness</span></label>
+        <label class="pill-option"><input type="checkbox" name="sensations" value="Nothing noticeable"><span>Nothing noticeable</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="body_shift">Where in your body did you notice the biggest shift?</label>
+      <input type="text" id="body_shift" name="body_shift" placeholder="e.g. shoulders, jaw, belly, legs...">
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="inner_experience">What came up for you emotionally or mentally during the session?</label>
+      <textarea id="inner_experience" name="inner_experience" rows="5" placeholder="Thoughts, memories, images, feelings, or simply quiet. Anything is useful."></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 04 -->
+  <div class="form-section">
+    <span class="section-label">04 &middot; Since Our Last Session</span>
+    <div class="info-box">If this was your first session, answer for the past two weeks. That becomes your starting point.</div>
+
+    <div class="q-field">
+      <label class="field-label" for="flare_days">How many days did you have a flare?</label>
+      <input type="number" id="flare_days" name="flare_days" min="0" placeholder="0">
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How intense was the worst flare?</label>
+      <input type="hidden" name="flare_worst" id="flare_worst">
+      <div class="scale-row" data-scale-for="flare_worst" data-min="0" data-max="10"></div>
+      <div class="scale-labels"><span>No flare</span><span>Severe</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">When stress or a flare came, how quickly did you come back compared to usual?</label>
+      <div class="stack-group">
+        <label class="stack-option"><input type="radio" name="flare_recovery" value="Faster than usual"><span>Faster than usual</span></label>
+        <label class="stack-option"><input type="radio" name="flare_recovery" value="About the same as usual"><span>About the same as usual</span></label>
+        <label class="stack-option"><input type="radio" name="flare_recovery" value="Slower than usual"><span>Slower than usual</span></label>
+        <label class="stack-option"><input type="radio" name="flare_recovery" value="No flare in this period"><span>No flare in this period</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Your sleep, on average, in this period</label>
+      <input type="hidden" name="sleep_quality" id="sleep_quality">
+      <div class="scale-row" data-scale-for="sleep_quality" data-min="1" data-max="10"></div>
+      <div class="scale-labels"><span>Very broken</span><span>Deep and restful</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Your stress level on a typical day in this period</label>
+      <input type="hidden" name="stress_typical" id="stress_typical">
+      <div class="scale-row" data-scale-for="stress_typical" data-min="1" data-max="10"></div>
+      <div class="scale-labels"><span>Very calm</span><span>Constantly under pressure</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Your caregiving and life load in this period</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="care_load" value="Light"><span>Light</span></label>
+        <label class="pill-option"><input type="radio" name="care_load" value="Moderate"><span>Moderate</span></label>
+        <label class="pill-option"><input type="radio" name="care_load" value="Heavy"><span>Heavy</span></label>
+        <label class="pill-option"><input type="radio" name="care_load" value="Very heavy"><span>Very heavy</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">On how many days did you do the Morning Return practice?</label>
+      <div class="pill-group">
+        <label class="pill-option"><input type="radio" name="practice_days" value="0"><span>0</span></label>
+        <label class="pill-option"><input type="radio" name="practice_days" value="1-3"><span>1-3</span></label>
+        <label class="pill-option"><input type="radio" name="practice_days" value="4-7"><span>4-7</span></label>
+        <label class="pill-option"><input type="radio" name="practice_days" value="8-11"><span>8-11</span></label>
+        <label class="pill-option"><input type="radio" name="practice_days" value="12 or more"><span>12 or more</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">Which tools did you use in real moments?</label>
+      <span class="field-sub">Choose all that apply</span>
+      <div class="pill-group">
+        <label class="pill-option"><input type="checkbox" name="tools_used" value="Morning Return"><span>Morning Return</span></label>
+        <label class="pill-option"><input type="checkbox" name="tools_used" value="Six Breaths"><span>Six Breaths</span></label>
+        <label class="pill-option"><input type="checkbox" name="tools_used" value="Evening 4:8"><span>Evening 4:8</span></label>
+        <label class="pill-option"><input type="checkbox" name="tools_used" value="Flare SOS"><span>Flare SOS</span></label>
+        <label class="pill-option"><input type="checkbox" name="tools_used" value="None this time"><span>None this time</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="what_helped">What helped the most, and when did you use it?</label>
+      <textarea id="what_helped" name="what_helped" rows="4" placeholder="A moment where the breath made a difference, or where it didn't."></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 05 -->
+  <div class="form-section">
+    <span class="section-label">05 &middot; Where You Are Now</span>
+
+    <div class="q-field">
+      <label class="field-label">How much do you trust your body's ability to handle stress and recover?</label>
+      <input type="hidden" name="trust_in_body" id="trust_in_body" required>
+      <div class="scale-row" data-scale-for="trust_in_body" data-min="1" data-max="10"></div>
+      <div class="scale-labels"><span>Not at all</span><span>Completely</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label">How much like yourself do you feel right now?</label>
+      <input type="hidden" name="self_score" id="self_score" required>
+      <div class="scale-row" data-scale-for="self_score" data-min="1" data-max="10"></div>
+      <div class="scale-labels"><span>Lost from myself</span><span>Fully grounded and alive</span></div>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="one_word">One word for how you feel now</label>
+      <input type="text" id="one_word" name="one_word" placeholder="One word">
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="key_takeaway">What do you want to remember from today?</label>
+      <textarea id="key_takeaway" name="key_takeaway" rows="4" placeholder="An insight, a sensation, a sentence that stayed with you."></textarea>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="next_focus">What would you like more of, or less of, next time?</label>
+      <textarea id="next_focus" name="next_focus" rows="3"></textarea>
+    </div>
+
+    <div class="q-field">
+      <label class="field-label" for="anything_else">Anything you'd like me to know before our next session?</label>
+      <textarea id="anything_else" name="anything_else" rows="3"></textarea>
+    </div>
+  </div>
+
+  <div class="submit-note"><strong>What happens next:</strong> I read every reflection before our next session and shape it around what you share here. If something urgent comes up in between, message me on WhatsApp.</div>
+
+  <button type="submit" class="btn btn-solid btn-submit" id="submit-btn">Send My Reflection</button>
+  <div class="submit-error" id="submit-error">Something went wrong sending your reflection. Please try again, or message Bechara directly on WhatsApp.</div>
+</form>
+
+<div id="thank-you">
+  <div class="disp">Thank You.</div>
+  <p>Your reflection is with me. Every one of these adds a line to the story your body is writing. Until next time, keep coming back to the breath, even for six breaths.</p>
+  <div class="signed">Bechara</div>
+</div>
+</div>
+
+<script>
+/* prefill session number dropdown 1-12 */
+var sessionSelect = document.getElementById('session_number');
+for (var s = 1; s <= 12; s++){
+  var opt = document.createElement('option');
+  opt.value = s;
+  opt.textContent = s;
+  sessionSelect.appendChild(opt);
+}
+
+/* prefill from personal link: ?name=Doaa&session=1&program=... */
+var params = new URLSearchParams(window.location.search);
+if (params.get('name')) document.getElementById('full_name').value = params.get('name');
+if (params.get('session')) sessionSelect.value = params.get('session');
+if (params.get('program')) document.getElementById('program_field').value = params.get('program');
+
+/* 1-10 (or custom range) scale buttons */
+document.querySelectorAll('.scale-row').forEach(function(row){
+  var targetId = row.getAttribute('data-scale-for');
+  var hidden = document.getElementById(targetId);
+  var min = parseInt(row.getAttribute('data-min') || '1', 10);
+  var max = parseInt(row.getAttribute('data-max') || '10', 10);
+  for (var i = min; i <= max; i++){
+    (function(n){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'scale-btn';
+      btn.textContent = n;
+      btn.addEventListener('click', function(){
+        row.querySelectorAll('.scale-btn').forEach(function(b){ b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        hidden.value = n;
+      });
+      row.appendChild(btn);
+    })(i);
+  }
+});
+
+/* submit via fetch, show thank-you on success */
+var form = document.getElementById('reflection-form');
+var submitBtn = document.getElementById('submit-btn');
+var errorBox = document.getElementById('submit-error');
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  errorBox.style.display = 'none';
+
+  /* build the subject line right before sending: Post-Session Reflection · [name] · Session [number] */
+  var nameVal = document.getElementById('full_name').value.trim() || 'Client';
+  var sessionVal = sessionSelect.value || '?';
+  document.getElementById('subject_field').value = 'Post-Session Reflection · ' + nameVal + ' · Session ' + sessionVal;
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+  var data = new FormData(form);
+  fetch(form.action, {
+    method: 'POST',
+    body: data,
+    headers: { 'Accept': 'application/json' }
+  }).then(function(response){
+    if (response.ok) {
+      form.style.display = 'none';
+      document.getElementById('thank-you').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      throw new Error('Form submission failed');
+    }
+  }).catch(function(){
+    errorBox.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send My Reflection';
+  });
+});
+</script>
+</body>
+</html>
